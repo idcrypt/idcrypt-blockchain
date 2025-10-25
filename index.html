@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ===== META SEO ===== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="idcrypt-blockchain — an open-source Web3 blockchain simulation project from idcrypt.xyz with live visual blocks, mining animation, and transaction counter.">
+  <meta name="keywords" content="idcrypt, blockchain, crypto, web3, python blockchain, smart contract, idcrypt.xyz, mining simulation, decentralized, crypto education">
+  <meta name="author" content="idcrypt.xyz">
+  <title>idcrypt-blockchain | Interactive Web3 Blockchain by idcrypt.xyz</title>
+
+  <!-- ===== FONTS & STYLE ===== -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:radial-gradient(circle at top,#000 0%,#0b0b0b 100%);
+      color:#fefefe;text-align:center;
+      overflow-x:hidden;min-height:100vh;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:flex-start;
+      padding-top:70px;
+    }
+    h1{
+      font-size:3rem;color:gold;margin-bottom:10px;
+      text-shadow:0 0 25px rgba(255,215,0,.6);
+      animation:glow 3s infinite alternate;
+    }
+    @keyframes glow{
+      from{text-shadow:0 0 10px rgba(255,215,0,.6);}
+      to{text-shadow:0 0 30px rgba(255,215,0,1);}
+    }
+    p{max-width:720px;line-height:1.6;margin:8px auto;font-weight:300;}
+    a{color:#00ffe0;text-decoration:none;font-weight:500;}
+    a:hover{color:gold}
+
+    .btn{
+      margin:25px 10px;display:inline-block;
+      background:linear-gradient(90deg,gold,#ffb300);
+      color:#000;font-weight:700;
+      padding:12px 26px;border-radius:30px;
+      letter-spacing:1px;text-transform:uppercase;
+      transition:all .3s ease;box-shadow:0 0 15px rgba(255,215,0,.5);
+    }
+    .btn:hover{transform:scale(1.05);box-shadow:0 0 25px rgba(255,215,0,.8);}
+
+    /* ===== BLOCKCHAIN ANIMATION ===== */
+    .chain-container{margin-top:60px;display:flex;flex-direction:column;align-items:center;}
+    .chain{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;max-width:800px;}
+    .block{
+      width:100px;height:100px;border:2px solid gold;border-radius:15px;
+      background:rgba(255,215,0,0.07);
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      font-weight:700;color:gold;
+      box-shadow:0 0 10px rgba(255,215,0,0.3);
+      transition:transform .3s;
+    }
+    .block span{font-size:0.8rem;color:#aaa;font-weight:400;}
+    .block.active{
+      background:linear-gradient(180deg,rgba(255,215,0,.2),rgba(255,215,0,.05));
+      transform:translateY(-10px);
+      box-shadow:0 0 30px rgba(255,215,0,0.8);
+    }
+    @keyframes pulse{
+      0%,100%{opacity:1;}
+      50%{opacity:.5;}
+    }
+
+    /* ===== TRANSACTION COUNTER ===== */
+    .stats{
+      margin-top:40px;
+      background:rgba(255,255,255,0.05);
+      border-radius:20px;
+      padding:20px 40px;
+      box-shadow:0 0 20px rgba(255,255,255,0.1);
+    }
+    .stats h2{
+      color:#00ffe0;
+      text-shadow:0 0 10px rgba(0,255,224,0.8);
+      font-size:2rem;
+      margin-bottom:10px;
+    }
+
+    footer{
+      margin-top:80px;margin-bottom:20px;
+      color:#888;font-size:0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🧱 idcrypt-blockchain</h1>
+  <p><strong>idcrypt-blockchain</strong> is an open-source blockchain simulation built in Python and visualized here for Web3 learners and innovators from <a href="https://idcrypt.xyz" target="_blank">idcrypt.xyz</a>.</p>
+  <p>Watch the live blockchain visualization below — blocks are mined, linked, and new transactions appear dynamically, showing the heartbeat of decentralization.</p>
+
+  <!-- ===== BLOCKCHAIN VISUAL ===== -->
+  <div class="chain-container">
+    <div class="chain" id="chain"></div>
+    <div class="stats">
+      <h2 id="txCount">0</h2>
+      <p>Simulated Transactions Processed</p>
+    </div>
+  </div>
+
+  <!-- ===== BUTTONS ===== -->
+  <div>
+    <a href="https://github.com/idcrypt/idcrypt-blockchain" target="_blank" class="btn">View on GitHub</a>
+    <a href="https://idcrypt.xyz" target="_blank" class="btn" style="background:linear-gradient(90deg,#00ffe0,#0096ff);color:#000;">Visit idcrypt.xyz</a>
+  </div>
+
+  <footer>© 2025 idcrypt.xyz — Web3 Innovation & Crypto Education</footer>
+
+  <!-- ===== INTERACTIVE SCRIPT ===== -->
+  <script>
+    // ==== generate blocks ====
+    const chainEl = document.getElementById("chain");
+    let txCounter = 0;
+    const blockCount = 6;
+    for(let i=1;i<=blockCount;i++){
+      const b=document.createElement("div");
+      b.className="block";
+      b.innerHTML=`#${String(i).padStart(3,"0")}<span>mined</span>`;
+      chainEl.appendChild(b);
+    }
+    const blocks=document.querySelectorAll(".block");
+
+    // ==== animate active block ====
+    let index=0;
+    function activateNextBlock(){
+      blocks.forEach(b=>b.classList.remove("active"));
+      blocks[index].classList.add("active");
+      txCounter += Math.floor(Math.random()*5)+1;
+      document.getElementById("txCount").innerText = txCounter.toLocaleString();
+      index = (index+1)%blocks.length;
+    }
+    setInterval(activateNextBlock,1500);
+
+    // subtle glow flicker
+    setInterval(()=>{
+      blocks.forEach(b=>{
+        if(b.classList.contains("active")){
+          b.style.boxShadow='0 0 25px gold';
+        }else{
+          b.style.boxShadow='0 0 10px rgba(255,215,0,0.3)';
+        }
+      });
+    },600);
+  </script>
+</body>
+</html>
